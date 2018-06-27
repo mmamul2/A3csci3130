@@ -14,7 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends Activity {
 
 
-    private ListView contactListView;
+    private ListView businessListView;
     private FirebaseListAdapter<Business> firebaseAdapter;
 
     @Override
@@ -27,22 +27,26 @@ public class MainActivity extends Activity {
 
         //Set-up Firebase
         appData.firebaseDBInstance = FirebaseDatabase.getInstance();
-        appData.firebaseReference = appData.firebaseDBInstance.getReference("contacts");
+        appData.firebaseReference = appData.firebaseDBInstance.getReference("businesses");
 
         //Get the reference to the UI contents
-        contactListView = (ListView) findViewById(R.id.listView);
+        businessListView = (ListView) findViewById(R.id.listView);
 
         //Set up the List View
        firebaseAdapter = new FirebaseListAdapter<Business>(this, Business.class,
-                android.R.layout.simple_list_item_1, appData.firebaseReference) {
+                android.R.layout.simple_list_item_2, appData.firebaseReference) {
             @Override
             protected void populateView(View v, Business model, int position) {
-                TextView contactName = (TextView)v.findViewById(android.R.id.text1);
-                contactName.setText(model.name);
+                TextView businessName = (TextView)v.findViewById(android.R.id.text1);
+                businessName.setText(model.name);
+
+                model.setBusinessNumber(this.getRef(position).getKey());
+                TextView businessNumber = (TextView)v.findViewById(android.R.id.text2);
+                businessNumber.setText(model.businessNumber);
             }
         };
-        contactListView.setAdapter(firebaseAdapter);
-        contactListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        businessListView.setAdapter(firebaseAdapter);
+        businessListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             // onItemClick method is called everytime a user clicks an item on the list
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -54,7 +58,7 @@ public class MainActivity extends Activity {
 
     public void createContactButton(View v)
     {
-        Intent intent=new Intent(this, CreateBusinessAcitivity.class);
+        Intent intent=new Intent(this, CreateBusinessActivity.class);
         startActivity(intent);
     }
 
