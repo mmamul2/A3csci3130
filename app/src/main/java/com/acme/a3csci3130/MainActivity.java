@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
                 TextView businessName = (TextView)v.findViewById(android.R.id.text1);
                 businessName.setText(model.name);
                 TextView businessNumber = (TextView)v.findViewById(android.R.id.text2);
-                businessNumber.setText(model.businessNumber.toString());
+                businessNumber.setText(model.businessNumber);
             }
         };
         businessListView.setAdapter(firebaseAdapter);
@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
             // onItemClick method is called everytime a user clicks an item on the list
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Business person = (Business) firebaseAdapter.getItem(position);
+                Business person = firebaseAdapter.getItem(position);
                 appData.firebaseReference = firebaseAdapter.getRef(position);
                 showDetailView(person);
             }
@@ -60,7 +60,6 @@ public class MainActivity extends Activity {
     public void createContactButton(View v)
     {
         Intent intent=new Intent(this, CreateBusinessActivity.class);
-
         startActivity(intent);
     }
 

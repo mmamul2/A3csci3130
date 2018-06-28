@@ -2,18 +2,21 @@ package com.acme.a3csci3130;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 
 public class DetailViewActivity extends Activity {
     private MyApplicationData appState;
-    private EditText nameField, primaryBusinessField, numberField, provinceField, addressField;
+    private EditText nameField, primaryBusinessField, numberField, addressField;
+    private Spinner provinceField;
     Business receivedBusinessInfo;
 
     @Override
@@ -26,15 +29,18 @@ public class DetailViewActivity extends Activity {
         nameField = (EditText) findViewById(R.id.name);
         primaryBusinessField = (EditText) findViewById(R.id.primaryBusiness);
         numberField = (EditText) findViewById(R.id.number);
-        provinceField = (EditText) findViewById(R.id.province);
         addressField = (EditText) findViewById(R.id.address);
+        provinceField = (Spinner) findViewById(R.id.provinceSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.provinces, android.R.layout.simple_spinner_item);
+        provinceField.setAdapter(adapter);
 
         if(receivedBusinessInfo != null){
             nameField.setText(receivedBusinessInfo.getName());
             primaryBusinessField.setText(receivedBusinessInfo.getPrimaryBusiness());
-            numberField.setText(receivedBusinessInfo.businessNumber.toString());
+            numberField.setText(receivedBusinessInfo.getBusinessNumber());
             addressField.setText(receivedBusinessInfo.getAddress());
-            provinceField.setText(receivedBusinessInfo.getProvince());
+            provinceField.setSelection(adapter.getPosition(receivedBusinessInfo.getProvince()));
         }
     }
 
@@ -43,18 +49,18 @@ public class DetailViewActivity extends Activity {
         receivedBusinessInfo.setBusinessNumber(numberField.getText().toString());
         receivedBusinessInfo.setPrimaryBusiness(primaryBusinessField.getText().toString());
         receivedBusinessInfo.setAddress(addressField.getText().toString());
-        receivedBusinessInfo.setProvince("AB");
+        receivedBusinessInfo.setProvince(provinceField.getSelectedItem().toString());
 
         appState.firebaseReference.setValue(receivedBusinessInfo, new DatabaseReference.CompletionListener(){
-
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if(databaseError != null){
-                    Snackbar.make(findViewById(R.id.detailsLayout), "Error: Update Failed",
-                            Snackbar.LENGTH_LONG).show();
+                    Toast toast = Toast.makeText(appState, "Error: Update failed!", Toast.LENGTH_LONG);
+                    toast.show();
                 } else {
-                    Snackbar.make(findViewById(R.id.detailsLayout), "Business record updated",
-                            Snackbar.LENGTH_LONG).show();
+                    finish();
+                    Toast toast = Toast.makeText(appState, "Business entry updated ", Toast.LENGTH_LONG);
+                    toast.show();
                 }
             }
         });
@@ -62,7 +68,18 @@ public class DetailViewActivity extends Activity {
 
     public void eraseContact(View v)
     {
-        appState.firebaseReference.removeValue();
-       //need to transition back to list, probably will for update too, if so will make a method to handle it
+        appState.firebaseReference.removeValue(new DatabaseReference.CompletionListener(){
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if(databaseError != null){
+                    Toast toast = Toast.makeText(appState, "Error: Delete failed!", Toast.LENGTH_LONG);
+                    toast.show();
+                } else {
+                    finish();
+                    Toast toast = Toast.makeText(appState, "Business entry deleted ", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+        });
     }
 }
