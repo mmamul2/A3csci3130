@@ -1,15 +1,18 @@
 {
   "rules": {
-    ".read": false,
-    ".write": false,
+    ".read": true,
+    ".write": true,
     "businesses": {
       "$business": {
-        ".validate": "newData.hasChildren(['name', 'primaryBusiness']) && $business.matches(/^[0-9]{3}$/)",
+        ".validate": "newData.hasChildren(['name', 'primaryBusiness', 'businessNuymber'])",
         "name": {
           ".validate": "newData.isString() && newData.val().length >=2 && newData.val().length <= 48"
         },
         "primaryBusiness": {
           ".validate": "newData.isString() && newData.val().matches(/^(Fisher|Distributor|Processor|Fish Monger)$/)"
+        },
+        "businessNumber": {
+          ".validate": "newData.val().matches(/^[0-9]{9}$/)"
         },
         "address": {
           ".validate": "newData.isString() && newData.val().length < 50"

@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Business implements Serializable {
 
-    public  String businessNumber;
+    public String businessNumber;
     public  String name;
     public  String primaryBusiness;
     public  String address;

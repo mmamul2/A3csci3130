@@ -9,6 +9,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends Activity {
@@ -23,7 +25,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //Get the app wide shared variables
-        MyApplicationData appData = (MyApplicationData)getApplication();
+        final MyApplicationData appData = (MyApplicationData)getApplication();
 
         //Set-up Firebase
         appData.firebaseDBInstance = FirebaseDatabase.getInstance();
@@ -39,10 +41,8 @@ public class MainActivity extends Activity {
             protected void populateView(View v, Business model, int position) {
                 TextView businessName = (TextView)v.findViewById(android.R.id.text1);
                 businessName.setText(model.name);
-
-                model.setBusinessNumber(this.getRef(position).getKey());
                 TextView businessNumber = (TextView)v.findViewById(android.R.id.text2);
-                businessNumber.setText(model.businessNumber);
+                businessNumber.setText(model.businessNumber.toString());
             }
         };
         businessListView.setAdapter(firebaseAdapter);
@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Business person = (Business) firebaseAdapter.getItem(position);
+                appData.firebaseReference = firebaseAdapter.getRef(position);
                 showDetailView(person);
             }
         });
@@ -59,6 +60,7 @@ public class MainActivity extends Activity {
     public void createContactButton(View v)
     {
         Intent intent=new Intent(this, CreateBusinessActivity.class);
+
         startActivity(intent);
     }
 
