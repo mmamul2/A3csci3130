@@ -1,6 +1,5 @@
 package com.acme.a3csci3130;
 
-
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -8,9 +7,6 @@ import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-
-
 
 import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onData;
@@ -25,39 +21,49 @@ import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.AllOf.allOf;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 
 import static org.hamcrest.Matchers.not;
 
+/*
+ *Code Reference for the Toast test
+ *Title: gistfile1.txt
+ *Author: Bruno de Lima e Silva
+ *Date: Apr 5, 2016
+ *Availability: https://gist.github.com/brunodles/badaa6de2ad3a84138d517795f15efc7#file-gistfile1-txt
+ */
+
 /**
- * Instrumentation test, which will execute on an Android device.
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * Espresso test for the application.
+ * The tests through InterruptedExceptions because of the wait statements.
+ * @author Matthew MacMullin
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class UiTests {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule =
             new ActivityTestRule(MainActivity.class);
 
+    /**
+     * Test for new business entry functionality
+     * @throws InterruptedException
+     */
     @Test
-   public void newEntryTest() throws InterruptedException {
+    public void newEntryTest() throws InterruptedException {
         onView(withId(R.id.submitButton)).perform(click());
         onView(withId(R.id.name)).perform(typeText("2"));
+        closeSoftKeyboard();
         setBaseUIFieldValues();
         onView(withId(R.id.submitButton)).perform(click());
         Thread.sleep(1000);
         onView(withText("Error: Creation failed!")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
         onView(withId(R.id.name)).perform(replaceText("UI Test2"));
+        closeSoftKeyboard();
         onView(withId(R.id.submitButton)).perform(click());
         Thread.sleep(1000);
         onView(withText("Business entry created")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
@@ -75,6 +81,10 @@ public class ExampleInstrumentedTest {
         onView(withId(R.id.deleteButton)).perform(click());
     }
 
+    /**
+     * Test for firebase rules
+     * @throws InterruptedException
+     */
     @Test
     public void firebaseRulesTest() throws InterruptedException {
         onView(withId(R.id.submitButton)).perform(click());
@@ -110,11 +120,16 @@ public class ExampleInstrumentedTest {
         onView(withText("Error: Creation failed!")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 
+    /**
+     * Test for entry deletion functionality
+     * @throws InterruptedException
+     */
     @Test
     public void deleteTest() throws InterruptedException {
         onView(withId(R.id.submitButton)).perform(click());
         setBaseUIFieldValues();
         onView(withId(R.id.name)).perform(replaceText("UI Test4"));
+        closeSoftKeyboard();
         onView(withId(R.id.submitButton)).perform(click());
 
         Thread.sleep(2000);
@@ -130,6 +145,10 @@ public class ExampleInstrumentedTest {
         onView(withTagValue(Matchers.is((Object) tag))).check(doesNotExist());
     }
 
+    /**
+     * Test for firebase entry access functionality
+     * @throws InterruptedException
+     */
     @Test
     public void readDetailsTest() throws InterruptedException {
         Thread.sleep(2000);
@@ -144,6 +163,10 @@ public class ExampleInstrumentedTest {
         onView(withId(R.id.provinceSpinner)).check(matches(withSpinnerText(containsString("NS"))));
     }
 
+    /**
+     * Test for entry update functionality
+     * @throws InterruptedException
+     */
     @Test
     public void updateTest() throws InterruptedException {
         Thread.sleep(2000);
@@ -185,6 +208,9 @@ public class ExampleInstrumentedTest {
         onView(withId(R.id.updateButton)).perform(click());
     }
 
+    /**
+     * Used to populate basic information for test cases.
+     */
     private void setBaseUIFieldValues(){
         closeSoftKeyboard();
         onView(withId(R.id.number)).perform(replaceText("123456789"));

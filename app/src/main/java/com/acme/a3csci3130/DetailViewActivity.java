@@ -8,24 +8,32 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
-
+/**
+ * Activity showing the details for a business that is selected from the main activity
+ * @author Editied by Matthew MacMullin
+ */
 public class DetailViewActivity extends Activity {
     private MyApplicationData appState;
     private EditText nameField, primaryBusinessField, numberField, addressField;
     private Spinner provinceField;
-    Business receivedBusinessInfo;
+    private Business receivedBusinessInfo;
 
+    /**
+     * Sets up and populates the Activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_view);
-        appState = ((MyApplicationData) getApplicationContext());
-        receivedBusinessInfo = (Business)getIntent().getSerializableExtra("Business");
 
+        //get app wide variables
+        appState = ((MyApplicationData) getApplicationContext());
+
+        receivedBusinessInfo = (Business)getIntent().getSerializableExtra("Business");
         nameField = (EditText) findViewById(R.id.name);
         primaryBusinessField = (EditText) findViewById(R.id.primaryBusiness);
         numberField = (EditText) findViewById(R.id.number);
@@ -44,6 +52,11 @@ public class DetailViewActivity extends Activity {
         }
     }
 
+    /**
+     * onClick method for the UPDATE DATA button.
+     * Attempts to update record in Firebase and notifies user pof success or not.
+     * @param v
+     */
     public void updateContact(View v){
         receivedBusinessInfo.setName(nameField.getText().toString());
         receivedBusinessInfo.setBusinessNumber(numberField.getText().toString());
@@ -66,6 +79,11 @@ public class DetailViewActivity extends Activity {
         });
     }
 
+    /**
+     * onClick method for the DELETE ENTRY button. Attempts to delete the record from Firebase and
+     * notifies user if successful ro not.
+     * @param v
+     */
     public void eraseContact(View v)
     {
         appState.firebaseReference.removeValue(new DatabaseReference.CompletionListener(){
