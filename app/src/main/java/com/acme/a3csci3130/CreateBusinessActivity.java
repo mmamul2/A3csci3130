@@ -55,9 +55,10 @@ public class CreateBusinessActivity extends Activity {
                     Toast toast = Toast.makeText(appState, "Error: Creation failed!",
                             Toast.LENGTH_LONG);
                     toast.show();
+
                 } else {
                     finish();
-                    Toast toast = Toast.makeText(appState, "Business entry created ",
+                    Toast toast = Toast.makeText(appState, "Business entry created",
                             Toast.LENGTH_LONG);
                     toast.show();
                 }

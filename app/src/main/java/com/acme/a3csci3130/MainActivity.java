@@ -43,8 +43,10 @@ public class MainActivity extends Activity {
                 businessName.setText(model.name);
                 TextView businessNumber = (TextView)v.findViewById(android.R.id.text2);
                 businessNumber.setText(model.businessNumber);
+businessName.setTag(model.name);
             }
         };
+
         businessListView.setAdapter(firebaseAdapter);
         businessListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             // onItemClick method is called everytime a user clicks an item on the list

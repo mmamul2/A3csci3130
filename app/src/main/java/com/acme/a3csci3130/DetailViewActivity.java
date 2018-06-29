@@ -59,7 +59,7 @@ public class DetailViewActivity extends Activity {
                     toast.show();
                 } else {
                     finish();
-                    Toast toast = Toast.makeText(appState, "Business entry updated ", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(appState, "Business entry updated", Toast.LENGTH_LONG);
                     toast.show();
                 }
             }
@@ -76,7 +76,7 @@ public class DetailViewActivity extends Activity {
                     toast.show();
                 } else {
                     finish();
-                    Toast toast = Toast.makeText(appState, "Business entry deleted ", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(appState, "Business entry deleted", Toast.LENGTH_LONG);
                     toast.show();
                 }
             }
